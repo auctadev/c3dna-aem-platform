@@ -4,7 +4,7 @@
   vars:
     srv_template: BOSH-OPENSTACK-CLC-UBUNTU-TRUSTY-GO_AGENT_3062
     srv_disks:
-    - { sizeGB: 15, type: raw }
+    - { sizeGB: 200, type: raw }
     srv_mem: "{{ mem | d(8) }}"
     srv_cpu: "{{ cpu | d(2) }}"
     srv_name: "{{ server_name | d('C3DP') }}"
