@@ -8,6 +8,7 @@
     srv_mem: "{{ mem | d(8) }}"
     srv_cpu: "{{ cpu | d(2) }}"
     srv_name: "{{ server_name | d('C3DP') }}"
+    srv_pass: "{{root_password}}"
   roles:
   - role: server
 
