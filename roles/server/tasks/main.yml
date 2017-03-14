@@ -1,0 +1,10 @@
+---
+# when `server_id` present in vars, pulls in inventory information
+# from clc_server_fact either path populates in-memory group `servers`
+
+- name: existing
+  include: infra_existing.yml
+  when: server_id is defined
+- name: create
+  include: infra_create.yml
+  when: server_id is not defined

@@ -1,0 +1,18 @@
+---
+- apt: name=gzip state=present
+- apt: name=bzip2 state=present
+- name: write to disk gz
+  raw: "set -eo pipefail && curl -s {{ url }} | gunzip -c - | dd of={{ device }} bs=4M"
+  when: "url.endswith('.gz')"
+  register: curldd
+- name: write to disk bz2
+  raw: "set -eo pipefail && curl -s {{ url }} | bunzip2 -c - | dd of={{ device }} bs=4M"
+  when: "url.endswith('.bz2')"
+  register: curldd
+- copy: src=sysadmin.redhat.tar.gz dest=/tmp/
+- copy: src=sysadmin.debian.tar.gz dest=/tmp/
+- copy: src=sysadmin.suse.tar.gz dest=/tmp/
+- copy: src=bootstrap_disk.py dest=/tmp/
+- name: bootstrap disk
+  shell: chdir=/tmp python /tmp/bootstrap_disk.py {{device}}
+  register: bootstrap

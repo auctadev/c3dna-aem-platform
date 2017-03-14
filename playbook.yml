@@ -1,0 +1,63 @@
+---
+- name: infrastructure
+  hosts: localhost
+  vars:
+    srv_template: BOSH-OPENSTACK-CLC-UBUNTU-TRUSTY-GO_AGENT_3062
+    srv_disks:
+    - { sizeGB: 200, type: raw }
+    srv_mem: "{{ mem | d(8) }}"
+    srv_cpu: "{{ cpu | d(2) }}"
+    srv_name: "{{ server_name | d('C3DP') }}"
+  roles:
+  - role: server
+
+- name: dependencies
+  hosts: servers
+  gather_facts: false
+  tasks:
+  # python not in bosh stemcell == not ansible-able
+  - name: ensure python
+    raw: which python || (apt-get update && apt-get install -qy python python-dev python-pip libxml2-dev libxslt1-dev)
+
+- name: write image
+  hosts: servers
+  vars:
+    url: http://bpimager.canada.os.ctl.io/c3dna/AEM-PLAT-disk1.raw.gz
+    device: /dev/sdb
+  roles:
+  - bpimager
+  tasks:
+  - debug: var=ansible_default_ipv4
+
+- name: popdisk
+  hosts: localhost
+  roles:
+  - { role: popdisk , ansible_hostname: "{{ groups.servers[0] }}", wait_popdisk: true }
+
+- name: Invoke api to add public IP
+  hosts: servers
+  tasks:
+    - name: invoke api call
+      uri:
+        url: https://api.ctl.io/v2/servers/{{lookup('env','CLC_ACCT_ALIAS')}}/{{groups.servers[0]}}/publicIPAddresses
+        method: POST
+        headers:
+          Content-Type: 'application/json'
+          Authorization: "Bearer {{ lookup('env', 'CLC_V2_API_TOKEN') }}"
+          Accept: 'application/json'
+        body: {'internalIPAddress' :'{{ ansible_ssh_host }}',
+           'ports': [
+           {'protocol':'TCP','port':80},
+           {'protocol':'TCP','port':8080},
+           {'protocol':'TCP','port':22},
+           {'protocol':'TCP','port':443},
+           {'protocol':'TCP','port':4502},
+           {'protocol':'TCP','port':4503}],
+           'sourceRestrictions':[]}
+        body_format: json
+        status_code: 200,202,204
+
+- name: load configuration
+  hosts: servers
+  roles:
+  - c3dna

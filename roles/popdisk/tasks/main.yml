@@ -1,0 +1,20 @@
+- name: download apiv1
+  get_url:
+    url: https://github.com/ack/clc-bin/releases/download/v1/apiv1.linux
+    dest: /tmp/apiv1
+    mode: 0755
+- name: post body
+  copy: content="{{ body | to_json }}" dest="/tmp/payload.json"
+- name: delete disk
+  raw: /tmp/apiv1 -endpoint https://api.ctl.io/REST/Server/DeleteDisk/JSON
+       -method POST -key '{{api_key}}' -pass '{{api_pass}}' < /tmp/payload.json
+  register: apicall
+- set_fact:
+    jobid: "{{ (apicall.stdout|from_json)['RequestID'] }}"
+- raw: echo '{"LocationAlias":"{{dc}}","AccountAlias":"{{alias}}","RequestID":"{{jobid}}"}' | /tmp/apiv1 -endpoint https://api.ctl.io/REST/Blueprint/GetDeploymentStatus/JSON
+       -method POST -key '{{api_key}}' -pass '{{api_pass}}'
+  when: "wait_popdisk | d(false)"
+  register: status
+  until: "(status.stdout|from_json).PercentComplete == 100"
+  retries: 30
+  delay: 30

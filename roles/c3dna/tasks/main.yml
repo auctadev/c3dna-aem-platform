@@ -1,0 +1,20 @@
+
+- name: clear work directory
+  file: name=/work state=absent
+
+- name: create work directory
+  file: name=/work state=directory mode=0755
+
+- name: copy controller shell file
+  template: src=configure_platform.sh dest=/work/configure_platform.sh mode=0755
+
+- name: copy controller script file
+  template: src=copy_c3dna_content.sh dest=/work/copy_c3dna_content.sh mode=0755
+
+- name: run controller setup script
+  shell: "/work/copy_c3dna_content.sh"
+  args:
+    chdir: /work
+
+- name:  reboot
+  shell: "shutdown -r 1"

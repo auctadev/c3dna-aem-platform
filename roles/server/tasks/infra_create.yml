@@ -1,0 +1,44 @@
+---
+- name: generate password
+  command: "openssl rand -base64 15"
+  register: serverpass
+  changed_when: False
+
+- name: build servers 
+  clc_server:
+    location: "{{ dc | d('') }}"
+    group: "{{ group | d('Default Group') }}"
+    network_id: "{{ network_id | d('') }}"
+    count: "{{ srv_count | d(1) }}"
+    name: "{{ srv_name | d('node') }}"
+    cpu: "{{ srv_cpu | d(2)}}"
+    memory: "{{ srv_mem | d(4) }}"
+    additional_disks: "{{ srv_disks | d([])}}"
+    template: "{{ srv_template | d('ubuntu-14-64') }}"
+    password: "{{ srv_pass | d(serverpass.stdout) }}"
+    add_public_ip: "{{ srv_public | d(false) }}"
+    public_ip_ports: "{{ srv_ports | d('') }}"
+  register: clc
+
+- name: inventory
+  add_host:
+    groups=servers
+    name={{ item.name }}
+    ansible_ssh_host={{ item.details.ipAddresses[0]['internal'] }}
+    ansible_ssh_user={{ 'Administrator' if 'win' in item.osType.lower() else 'root'}}
+    ansible_ssh_pass={{ srv_pass | d(serverpass.stdout) }}
+    ansible_connection={{ 'winrm' if 'win' in item.osType.lower() else 'ssh' }}
+    ansible_port={{ 5986 if 'windows' in item.osType.lower() else 22 }}
+    ansible_winrm_scheme='https'
+    ansible_winrm_server_cert_validation=ignore
+    publicip={{ item.details.ipAddresses[-1]['public'] | d('') }}
+  with_items: clc.servers
+   
+- wait_for:
+    host: "{{item.ipaddress}}"
+    port: 22
+    delay: 5
+    timeout: 320
+  with_items: clc.servers
+
+

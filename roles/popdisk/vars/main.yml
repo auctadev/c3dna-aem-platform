@@ -1,0 +1,8 @@
+---
+alias: "{{ lookup('env', 'CLC_ACCT_ALIAS') }}"
+body:
+  AccountAlias: "{{ alias }}"
+  Name: "{{ ansible_hostname }}"
+  ScsiBusID: 0
+  ScsiDeviceID: 0
+  OverrideFailsafes: true

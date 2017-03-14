@@ -1,0 +1,21 @@
+---
+- name: resolve existing server
+  clc_server_fact:
+    server_id: "{{ item }}"
+    credentials: true
+  register: fact
+  with_items: server_id
+
+- name: inventory
+  add_host:
+    groups=servers
+    name={{ item.server.name }}
+    ansible_ssh_host={{ item.server.details.ipAddresses[0]['internal'] }}
+    ansible_ssh_user={{ item.server.credentials.userName }}
+    ansible_ssh_pass={{ item.server.credentials.password }}
+    ansible_connection={{ 'winrm' if 'windows' in item.server.osType.lower() else 'ssh' }}
+    ansible_port={{ 5986 if 'windows' in item.server.osType.lower() else 22 }}
+    ansible_winrm_scheme='https'
+    ansible_winrm_server_cert_validation=ignore
+    publicip={{ item.server.details.ipAddresses[-1]['public'] | d('') }}
+  with_items: fact.results

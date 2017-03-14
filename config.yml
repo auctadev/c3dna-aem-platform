@@ -1,0 +1,60 @@
+---
+name: C3DNA Platform Component For AEM Customers
+shortDescription: Application lifecycle management
+public: false
+author: C3DNA
+organization: C3DNA
+defaultPlaybook: playbook.yml
+imagePath: https://raw.github.com/clc-runner/Assets/master/c3dna.png
+description: C3DNA Platform
+
+fields:
+- displayName: Datacenter
+  name: dc
+  required: true
+  type: datacenters
+- displayName: Network
+  name: network_id
+  parent: dc
+  required: true
+  type: networks
+- displayName: Group
+  name: group
+  parent: dc
+  required: true
+  type: groups
+- displayName: Server Name
+  name: server_name
+  required: true
+  default: C3DP
+  type: text
+- displayName: API Key
+  name: api_key
+  required: true
+  type: text
+  default: 56a8e3122ec24d4d8c4a3f6d66bcbf7c
+- displayName: API Password
+  name: api_pass
+  required: true
+  type: text
+  default: yh=h)~$2r_t_7KBV
+- displayName: Root Password For server
+  name: root_password
+  type: password
+  required: true
+  default: cccDNA2013!
+- displayName: Controller IP Address
+  name: controller_ip
+  type: text
+  required: true
+  default: 64.15.187.82
+- displayName: Platform ID
+  name: platformID
+  type: text
+  required: true
+  default: C3DNA_platform
+- displayName: Cluster Key
+  name: clusterID
+  type: text
+  required: true
+  default: CLUSTER_1
