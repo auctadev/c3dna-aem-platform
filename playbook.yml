@@ -2,6 +2,7 @@
 - name: infrastructure
   hosts: localhost
   vars:
+    server_id: ny1dimedptest01
     srv_template: BOSH-OPENSTACK-CLC-UBUNTU-TRUSTY-GO_AGENT_3062
     srv_disks:
     - { sizeGB: 200, type: raw }
