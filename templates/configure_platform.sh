@@ -214,9 +214,9 @@ then
 
       cd $CCC_HOME
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER chown cccuser:ccc -R $CCC_HOME | tee -a $LOGFILE
+      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chown cccuser:ccc -R $CCC_HOME | tee -a $LOGFILE
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER chmod 775 -R $CCC_HOME | tee -a $LOGFILE
+      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chmod 775 -R $CCC_HOME | tee -a $LOGFILE
 
 
       echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh stop | tee -a $LOGFILE
