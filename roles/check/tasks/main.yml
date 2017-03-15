@@ -7,9 +7,9 @@
   copy: content="{{ body | to_json }}" dest="/tmp/payload.json"
 - debug:
     msg: "Sending login request with the following body: {{ body | to_json }}"
-- name: login apiv1
-  - block:
-      raw: /tmp/apiv1 -endpoint https://api.ctl.io/REST/Auth/Logon/
+tasks:
+    - block:
+        raw: /tmp/apiv1 -endpoint https://api.ctl.io/REST/Auth/Logon/
              -method POST -key '{{api_key}}' -pass '{{api_pass}}' < /tmp/payload.json
         register: apicall
     rescue:
