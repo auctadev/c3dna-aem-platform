@@ -1,4 +1,9 @@
 ---
+- name: check credentials
+  hosts: localhost
+  roles:
+  - role: check
+
 - name: infrastructure
   hosts: localhost
   vars:
