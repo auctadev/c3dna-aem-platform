@@ -5,8 +5,8 @@
     mode: 0755
 - name: post body
   copy: content="{{ body | to_json }}" dest="/tmp/payload.json"
-- name: debug body
-    debug: "Body is {{ body }}. Body json is {{ body | to_json }}"
+- debug:
+    msg: "Body is {{ body }}. Body json is {{ body | to_json }}"
 - name: delete disk
   raw: /tmp/apiv1 -endpoint https://api.ctl.io/REST/Server/DeleteDisk/JSON
        -method POST -key '{{api_key}}' -pass '{{api_pass}}' < /tmp/payload.json
