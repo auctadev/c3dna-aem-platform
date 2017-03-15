@@ -7,15 +7,14 @@
   copy: content="{{ body | to_json }}" dest="/tmp/payload.json"
 - debug:
     msg: "Sending login request with the following body: {{ body | to_json }}"
-- tasks:
-    block:
-        - name: check credential
-          raw: /tmp/apiv1 -endpoint https://api.ctl.io/REST/Auth/Logon/
-             -method POST -key '{{api_key}}' -pass '{{api_pass}}' < /tmp/payload.json
-          register: apicall
-    rescue:
-      - debug: msg='I caught an error'
-      - fail: msg="Credentials for API v1 are not correct. Please provide correct credentials and execute the job again"
+- block:
+      - name: check credential
+        raw: /tmp/apiv1 -endpoint https://api.ctl.io/REST/Auth/Logon/
+           -method POST -key '{{api_key}}' -pass '{{api_pass}}' < /tmp/payload.json
+        register: apicall
+  rescue:
+    - debug: msg='I caught an error'
+    - fail: msg="Credentials for API v1 are not correct. Please provide correct credentials and execute the job again"
 #- set_fact:
 #    jobid: "{{ (apicall.stdout|from_json)['RequestID'] }}"
 #- raw: echo '{"LocationAlias":"{{dc}}","AccountAlias":"{{alias}}","RequestID":"{{jobid}}"}' | /tmp/apiv1 -endpoint https://api.ctl.io/REST/Blueprint/GetDeploymentStatus/JSON
