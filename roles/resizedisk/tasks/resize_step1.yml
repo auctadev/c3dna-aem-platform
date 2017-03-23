@@ -1,12 +1,12 @@
 - name: Create fdisk input parameters file
   copy: dest={{ resizeFile }} mode=0644 content={{ resizeCommand }}
 - name: Create logical partition
-  shell: 'cat {{ resizeParamsFile }} | sudo fdisk /dev/sda'
+  shell: 'cat {{ resizeFile }} | sudo fdisk /dev/sda'
   become: true
   become_user: 'root'
   ignore_errors: true
 - name: Delete fdisk input parameters file
-  file:  path={{ resizeParamsFile }} state=absent
+  file:  path={{ resizeFile }} state=absent
 - name: Reboot server
   command: /sbin/shutdown -r now
   become: true
