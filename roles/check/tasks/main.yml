@@ -10,7 +10,7 @@
 - block:
       - name: check credential
         raw: /tmp/apiv1 -endpoint https://api.ctl.io/REST/Auth/Logon/
-           -method POST -key '{{api_key}}' -pass '{{api_pass}}' < /tmp/payload.json
+           -method POST -key '{{apiV1Key}}' -pass '{{apiV1Passwd}}' < /tmp/payload.json
         register: apicall
   rescue:
     - fail: msg="Credentials for API v1 are not correct. Please provide correct credentials and execute the job again"

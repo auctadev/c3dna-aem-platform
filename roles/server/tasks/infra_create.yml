@@ -6,9 +6,9 @@
 
 - name: build servers 
   clc_server:
-    location: "{{ dc | d('') }}"
-    group: "{{ group | d('Default Group') }}"
-    network_id: "{{ network_id | d('') }}"
+    location: "{{ datacenter | d('') }}"
+    group: "{{ groupID | d('Default Group') }}"
+    network_id: "{{ networkID | d('') }}"
     count: "{{ srv_count | d(1) }}"
     name: "{{ srv_name | d('node') }}"
     cpu: "{{ srv_cpu | d(2)}}"

@@ -12,8 +12,8 @@
     - { sizeGB: 200, type: raw }
     srv_mem: "{{ mem | d(8) }}"
     srv_cpu: "{{ cpu | d(2) }}"
-    srv_name: "{{ server_name | d('C3DP') }}"
-    srv_pass: "{{root_password}}"
+    srv_name: "{{ serverName | d('C3DP') }}"
+    srv_pass: "{{ rootPasswd }}"
   roles:
   - role: server
 

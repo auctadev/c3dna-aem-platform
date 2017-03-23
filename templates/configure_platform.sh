@@ -14,7 +14,7 @@ FILE_NAME=`basename "$0"`
 
 #Input
 internalIP="{{ansible_ssh_host}}"
-controllerIP="{{controller_ip}}"
+controllerIP="{{controllerIP}}"
 platformID="{{platformID}}"
 clusterID="{{clusterID}}"
 

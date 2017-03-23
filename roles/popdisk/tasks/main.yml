@@ -9,12 +9,12 @@
     msg: "Body is {{ body }}. Body json is {{ body | to_json }}"
 - name: delete disk
   raw: /tmp/apiv1 -endpoint https://api.ctl.io/REST/Server/DeleteDisk/JSON
-       -method POST -key '{{api_key}}' -pass '{{api_pass}}' < /tmp/payload.json
+       -method POST -key '{{apiV1Key}}' -pass '{{apiV1Passwd}}' < /tmp/payload.json
   register: apicall
 - set_fact:
     jobid: "{{ (apicall.stdout|from_json)['RequestID'] }}"
-- raw: echo '{"LocationAlias":"{{dc}}","AccountAlias":"{{alias}}","RequestID":"{{jobid}}"}' | /tmp/apiv1 -endpoint https://api.ctl.io/REST/Blueprint/GetDeploymentStatus/JSON
-       -method POST -key '{{api_key}}' -pass '{{api_pass}}'
+- raw: echo '{"LocationAlias":"{{datacenter}}","AccountAlias":"{{alias}}","RequestID":"{{jobid}}"}' | /tmp/apiv1 -endpoint https://api.ctl.io/REST/Blueprint/GetDeploymentStatus/JSON
+       -method POST -key '{{apiV1Key}}' -pass '{{apiV1Passwd}}'
   when: "wait_popdisk | d(false)"
   register: status
   until: "(status.stdout|from_json).PercentComplete == 100"
