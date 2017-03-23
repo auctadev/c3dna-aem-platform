@@ -1,0 +1,6 @@
+- name: step1
+  include: resize_step1.yml
+  when: step == 1
+- name: create
+  include: resize_step2.yml
+  when: step == 2

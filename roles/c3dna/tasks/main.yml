@@ -5,10 +5,10 @@
 - name: create work directory
   file: name=/work state=directory mode=0755
 
-- name: copy controller shell file
+- name: copy platform shell file
   template: src=configure_platform.sh dest=/work/configure_platform.sh mode=0755
 
-- name: copy controller script file
+- name: copy platform script file
   template: src=copy_c3dna_content.sh dest=/work/copy_c3dna_content.sh mode=0755
 
 - name: run controller setup script

@@ -63,6 +63,30 @@
         body_format: json
         status_code: 200,202,204
 
+- name: Resize Disk Step 1
+  hosts: servers
+  vars:
+    step: 1
+  roles:
+  - role: resizedisk
+
+- name: wait
+  hosts: localhost
+  tasks:
+    - wait_for:
+        host: "{{ item.details.ipAddresses[0]['internal'] }}"
+        port: 22
+        delay: 5
+        timeout: 320
+      with_items: '{{ serverInfos.servers }}'
+
+- name: Resize Disk Step 2
+  hosts: servers
+  vars:
+    step: 2
+  roles:
+  - role: resizedisk
+
 - name: load configuration
   hosts: servers
   roles:

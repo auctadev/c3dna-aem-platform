@@ -1,0 +1,6 @@
+---
+resizeFile: "/home/cccuser/resizeDisk"
+resizeCommand: "n\np\n73400320\n\nt\n3\n8e\nw"
+partition: "/dev/sda4"
+volume: "c3d-plat-vg"
+diskSize: "165"

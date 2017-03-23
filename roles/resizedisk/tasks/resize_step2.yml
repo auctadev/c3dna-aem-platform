@@ -1,0 +1,20 @@
+- name: Create physical volume
+  shell: pvcreate {{ partition }}
+  become: true
+  become_user: 'root'
+  ignore_errors: false
+- name: Extend physical volume
+  shell: vgextend {{ volume }} {{ partition }}
+  become: true
+  become_user: 'root'
+  ignore_errors: false
+- name: Allocate space on volume
+  shell: lvextend -L+{{ diskSize }}G /dev/{{ volume }}/root
+  become: true
+  become_user: 'root'
+  ignore_errors: false
+- name: Resize partition
+  shell: resize2fs -p /dev/{{ volume }}/root
+  become: true
+  become_user: 'root'
+  ignore_errors: false
