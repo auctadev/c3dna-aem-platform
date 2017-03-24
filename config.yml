@@ -32,29 +32,24 @@ fields:
   name: apiV1Key
   required: true
   type: text
-  default: 56a8e3122ec24d4d8c4a3f6d66bcbf7c
 - displayName: V1 API Password
   name: apiV1Passwd
   required: true
   type: text
-  default: yh=h)~$2r_t_7KBV
 - displayName: Root Password For servers
   name: rootPasswd
   type: password
   required: true
-  default: cccDNA2013!
 - displayName: Controller IP Address
   name: controllerIP
   type: text
   required: true
-  default: 64.15.187.82
 - displayName: Platform ID
   name: platformID
   type: text
   required: true
-  default: C3DNA_platform
 - displayName: Cluster Key
   name: clusterID
   type: text
   required: true
-  default: CLUSTER_1
+  default: CTL_Cloud
