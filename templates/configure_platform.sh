@@ -16,7 +16,7 @@ FILE_NAME=`basename "$0"`
 internalIP="{{ansible_ssh_host}}"
 controllerIP="{{controllerIP}}"
 platformID="{{platformID}}"
-clusterID="{{clusterID}}"
+clusterID="{{clusterID | d('CTL_Cloud') }}"
 
 #Vps
 VPS_LN=ctl.bp.aem.c3dna.net

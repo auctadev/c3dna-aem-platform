@@ -1,0 +1,25 @@
+---
+- fail:
+    msg: "You should specify the 'datacenter' property!"
+  when: datacenter is undefined
+- fail:
+    msg: "You should specify the 'networkID' property!"
+  when: networkID is undefined
+- fail:
+    msg: "You should specify the 'groupID' property!"
+  when: groupID is undefined
+- fail:
+    msg: "You should specify the 'apiV1Key' property!"
+  when: apiV1Key is undefined
+- fail:
+    msg: "You should specify the 'apiV1Passwd' property!"
+  when: apiV1Passwd is undefined
+- fail:
+    msg: "You should specify the 'rootPasswd' property!"
+  when: rootPasswd is undefined
+- fail:
+    msg: "You should specify the 'controllerIP' property!"
+  when: controllerIP is undefined
+- fail:
+    msg: "You should specify the 'platformID' property!"
+  when: platformID is undefined
