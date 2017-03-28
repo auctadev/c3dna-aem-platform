@@ -77,6 +77,13 @@
   roles:
   - role: resizedisk
 
+- name: dependencies
+  hosts: servers
+  gather_facts: false
+  tasks:
+  - name: ensure sshpass
+    raw: which sshpass || (apt-get install -qy sshpass)
+
 - name: load configuration
   hosts: servers
   roles:

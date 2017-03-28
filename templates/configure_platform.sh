@@ -94,6 +94,42 @@ ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 }
 
 #=========================================================================
+#The replace_line_statemachine function
+#@Usage : replace_line_statemachine "<key>" "<key> = <value>" <FILE>
+#@Example: replace_line_statemachine "DHT.enable" "DHT.enable = true" $CCC_DIR/conf/include/UI.properties
+#=========================================================================
+function replace_line_statemachine(){
+
+  KEY=$1
+  NEW_LINE=$2
+  FILE=$3
+  MODE=$4
+
+  foundentry=false
+
+  i=0
+  while read -r line || [[ -n "$line" ]]; do
+     i=$((i+1))
+     if [[ $line == *$KEY* ]]
+     then
+       sudo sed -i "$i s@.*@$NEW_LINE@" $FILE
+       foundentry=true
+     fi
+
+  done < $FILE
+
+  if [[ $foundentry == false ]]
+  then
+    if [[ $MODE == "warn" ]]
+    then
+      print_both "WARN: unable to find $KEY entry on $FILE"
+    else
+      print_both "ERROR: unable to find $KEY entry on $FILE"
+    fi
+  fi
+}
+
+#=========================================================================
 #The downloadRepo function download AEM requirements zip files
 #=========================================================================
 function downloadRepo(){
@@ -204,6 +240,8 @@ then
       updatePlaceholder "<INTERNAL_IP>" $internalIP $CONF_FILE
       updatePlaceholder "<PUBLIC_IP>" $publicIP $CONF_FILE
       updatePlaceholder "<CCCUSER_PASSWORD>" $CCCUSER_PASSWORD $CONF_FILE
+
+      replace_line_statemachine "replSet" "replSet = DefaultCloud" /etc/mongodb.conf
 
       FILE_CONTENT=$(cat $CONF_FILE)
       print "\nFile $CONF_FILE content is:\n[\n$FILE_CONTENT\n]\n" &>> $LOGFILE
