@@ -52,8 +52,6 @@
   hosts: servers
   roles:
 - role: getpublicip
-#var name --> publicIP
-
 
 - name: Resize Disk Step 1
   hosts: servers
