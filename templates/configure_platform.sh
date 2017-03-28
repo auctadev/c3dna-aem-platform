@@ -225,6 +225,10 @@ then
 
       sleep 2
 
+      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/hard.sh start | tee -a $LOGFILE
+
+      sleep 1
+
       echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh start | tee -a $LOGFILE
 
       sleep 5
