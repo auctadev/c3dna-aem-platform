@@ -1,0 +1,15 @@
+- name: download apiv2
+  get_url:
+    url: https://github.com/ack/clc-bin/releases/download/v1/apiv2.linux
+    dest: /tmp/apiv2
+    mode: 0755
+- name: get server
+  raw: /tmp/apiv2 -endpoint https://api.ctl.io/v2/servers/{{lookup('env','CLC_ACCT_ALIAS')}}/{{ansible_hostname}}
+       -method GET -user '{{apiV2User}}' -pass '{{apiV2Passwd}}'
+  register: response
+
+- set_fact:
+    publicIP: "{{ (response.stdout_lines[1] |from_json)['details']['ipAddresses'][0]['public']}}"
+
+- debug:
+    msg: "Public ip: {{ publicIP }}"

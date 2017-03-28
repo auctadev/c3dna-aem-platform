@@ -1,0 +1,56 @@
+- name: download apiv1
+  get_url:
+    url: https://github.com/ack/clc-bin/releases/download/v1/apiv1.linux
+    dest: /tmp/apiv1
+    mode: 0755
+- name: add publicip
+  uri:
+    url: https://api.ctl.io/v2/servers/{{lookup('env','CLC_ACCT_ALIAS')}}/{{ansible_hostname}}/publicIPAddresses
+    method: POST
+    headers:
+      Content-Type: 'application/json'
+      Authorization: "Bearer {{ lookup('env', 'CLC_V2_API_TOKEN') }}"
+      Accept: 'application/json'
+    body: {'internalIPAddress' :'{{ ansible_ssh_host }}',
+       'ports': [
+       {'protocol':'TCP','port':80},
+       {'protocol':'TCP','port':8080},
+       {'protocol':'TCP','port':53},
+       {'protocol':'UDP','port':53},
+       {'protocol':'TCP','port':22},
+       {'protocol':'TCP','port':443},
+
+       {'protocol':'TCP','port':2221},
+       {'protocol':'TCP','port':2225},
+       {'protocol':'TCP','port':2226},
+       {'protocol':'TCP','port':2227},
+
+       {'protocol':'TCP','port':4000},
+       {'protocol':'TCP','port':4747},
+       {'protocol':'TCP','port':47474},
+       {'protocol':'TCP','port':7979},
+       {'protocol':'TCP','port':8989},
+       {'protocol':'TCP','port':27017},
+       {'protocol':'TCP','port':53306},
+       {'protocol':'TCP','port':3306},
+       {'protocol':'TCP','port':57017},
+       {'protocol':'TCP','port':9000},
+       {'protocol':'TCP','port':40080},
+       {'protocol':'TCP','port':7001},
+       {'protocol':'TCP','port':2250, portTo: 2300}],
+       'sourceRestrictions':[]}
+    body_format: json
+    status_code: 200,202,204
+  register: response
+
+- debug:
+    msg: "response final id add public ip: {{ response.json.id.split('-')[1] }}"
+- set_fact:
+    jobid: "{{ response.json.id.split('-')[1] }}"
+- raw: echo '{"LocationAlias":"{{datacenter}}","AccountAlias":"{{alias}}","RequestID":"{{jobid}}"}' | /tmp/apiv1 -endpoint https://api.ctl.io/REST/Blueprint/GetDeploymentStatus/JSON
+       -method POST -key '{{apiV1Key}}' -pass '{{apiV1Passwd}}'
+  when: "wait_addpublicip | d(false)"
+  register: status
+  until: "(status.stdout_lines[1]|from_json).PercentComplete == 100"
+  retries: 30
+  delay: 30

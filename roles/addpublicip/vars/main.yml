@@ -1,0 +1,2 @@
+---
+alias: "{{ lookup('env', 'CLC_ACCT_ALIAS') }}"

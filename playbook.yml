@@ -43,28 +43,17 @@
   roles:
   - { role: popdisk , ansible_hostname: "{{ groups.servers[0] }}", wait_popdisk: true }
 
-- name: Invoke api to add public IP
+- name: add public IP
   hosts: servers
-  tasks:
-    - name: invoke api call
-      uri:
-        url: https://api.ctl.io/v2/servers/{{lookup('env','CLC_ACCT_ALIAS')}}/{{groups.servers[0]}}/publicIPAddresses
-        method: POST
-        headers:
-          Content-Type: 'application/json'
-          Authorization: "Bearer {{ lookup('env', 'CLC_V2_API_TOKEN') }}"
-          Accept: 'application/json'
-        body: {'internalIPAddress' :'{{ ansible_ssh_host }}',
-           'ports': [
-           {'protocol':'TCP','port':80},
-           {'protocol':'TCP','port':8080},
-           {'protocol':'TCP','port':22},
-           {'protocol':'TCP','port':443},
-           {'protocol':'TCP','port':4502},
-           {'protocol':'TCP','port':4503}],
-           'sourceRestrictions':[]}
-        body_format: json
-        status_code: 200,202,204
+  roles:
+- {role: addpublicip, ansible_hostname: "{{ groups.servers[0] }}", wait_addpublicip: true }
+
+- name: get public IP
+  hosts: servers
+  roles:
+- role: getpublicip
+#var name --> publicIP
+
 
 - name: Resize Disk Step 1
   hosts: servers
