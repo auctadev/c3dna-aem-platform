@@ -14,6 +14,7 @@ FILE_NAME=`basename "$0"`
 
 #Input
 internalIP="{{ansible_ssh_host}}"
+publicIP="{{publicIP}}"
 controllerIP="{{controllerIP}}"
 platformID="{{platformID}}"
 clusterID="{{clusterID | d('CTL_Cloud') }}"
@@ -201,6 +202,7 @@ then
       updatePlaceholder "<PLATFORM_ID>" $platformID $CONF_FILE
       updatePlaceholder "<CONTROLLER_IP>" $controllerIP $CONF_FILE
       updatePlaceholder "<INTERNAL_IP>" $internalIP $CONF_FILE
+      updatePlaceholder "<PUBLIC_IP>" $publicIP $CONF_FILE
       updatePlaceholder "<CCCUSER_PASSWORD>" $CCCUSER_PASSWORD $CONF_FILE
 
       FILE_CONTENT=$(cat $CONF_FILE)
