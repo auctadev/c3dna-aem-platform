@@ -46,7 +46,7 @@
 - name: add public IP
   hosts: servers
   roles:
-- {role: addpublicip, ansible_hostname: "{{ groups.servers[0] }}", wait_addpublicip: true }
+  - {role: addpublicip, ansible_hostname: "{{ groups.servers[0] }}", wait_addpublicip: true }
 
 - name: get public IP
   hosts: servers
