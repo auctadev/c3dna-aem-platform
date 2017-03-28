@@ -51,7 +51,7 @@
 - name: get public IP
   hosts: servers
   roles:
-- role: getpublicip
+  - role: getpublicip
 
 - name: Resize Disk Step 1
   hosts: servers
