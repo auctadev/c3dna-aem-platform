@@ -15,8 +15,6 @@
        'ports': [
        {'protocol':'TCP','port':80},
        {'protocol':'TCP','port':8080},
-       {'protocol':'TCP','port':53},
-       {'protocol':'UDP','port':53},
        {'protocol':'TCP','port':22},
        {'protocol':'TCP','port':443},
 
@@ -26,17 +24,13 @@
        {'protocol':'TCP','port':2227},
 
        {'protocol':'TCP','port':4000},
-       {'protocol':'TCP','port':4747},
-       {'protocol':'TCP','port':47474},
        {'protocol':'TCP','port':7979},
        {'protocol':'TCP','port':8989},
        {'protocol':'TCP','port':27017},
-       {'protocol':'TCP','port':53306},
-       {'protocol':'TCP','port':3306},
        {'protocol':'TCP','port':57017},
-       {'protocol':'TCP','port':9000},
-       {'protocol':'TCP','port':40080},
-       {'protocol':'TCP','port':7001},
+
+       {'protocol':'TCP','port':4502},
+       {'protocol':'TCP','port':4503},
        {'protocol':'TCP','port':2250, portTo: 2300}],
        'sourceRestrictions':[]}
     body_format: json
