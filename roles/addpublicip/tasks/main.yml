@@ -46,5 +46,5 @@
   when: "wait_addpublicip | d(false)"
   register: status
   until: "(status.stdout_lines[1]|from_json).PercentComplete == 100"
-  retries: 30
+  retries: 120
   delay: 30
