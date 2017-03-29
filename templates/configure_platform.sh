@@ -52,11 +52,13 @@ function print(){
 
    local line=$1
 
-   echo -e $line | tee -a $LOGFILE
-
    if [[ $line == *ERROR* ]]
    then
+     line="$line. Check logs at $LOGFILE for details"
+     echo -e $line | tee -a $LOGFILE
      exit 1;
+   else
+     echo -e $line | tee -a $LOGFILE
    fi
 
 }
@@ -247,9 +249,10 @@ then
       print "\nFile $CONF_FILE content is:\n[\n$FILE_CONTENT\n]\n" &>> $LOGFILE
 
       sudo chef-solo -c $BLUEPRINT_DIR/solo.rb -j $BLUEPRINT_DIR/conf.json | tee -a $LOGFILE
-      if [[ $? != 0 ]]
+      tail -n 10 $LOGFILE  | grep "process exited unsuccessfully"
+      if [[ $? == 0 ]]
       then
-         print "ERROR: unable to execute chef-solo configuration. Check logs for details"
+         print "ERROR: unable to execute chef-solo configuration"
       fi
 
       cd $CCC_HOME
@@ -263,18 +266,13 @@ then
 
       sleep 2
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/hard.sh start | tee -a $LOGFILE
+      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/hard.sh start &>> $LOGFILE || print "ERROR unable to prepare platform"
 
       sleep 1
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh start | tee -a $LOGFILE
+      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh start &>> $LOGFILE || print "ERROR unable to engine platform"
 
       sleep 5
-
-      sudo rm /etc/rc1.d/S99configure_platform.sh
-      sudo rm /etc/rc2.d/S99configure_platform.sh
-      sudo rm /etc/rc3.d/S99configure_platform.sh
-      sudo rm /etc/init.d/configure_platform.sh
 
       exit 0;
 

@@ -8,13 +8,9 @@
 - name: copy platform shell file
   template: src=configure_platform.sh dest=/work/configure_platform.sh mode=0755
 
-- name: copy platform script file
-  template: src=copy_c3dna_content.sh dest=/work/copy_c3dna_content.sh mode=0755
-
 - name: run controller setup script
-  shell: "/work/copy_c3dna_content.sh"
+  shell: "/work/configure_platform.sh"
+  become: true
+  become_user: 'root'
   args:
     chdir: /work
-
-- name:  reboot
-  shell: "shutdown -r 1"
