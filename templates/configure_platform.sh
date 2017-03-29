@@ -266,14 +266,15 @@ then
 
       sleep 2
 
+      print "Executing prepare script"
       echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/hard.sh start &>> $LOGFILE || print "ERROR unable to prepare platform"
 
       sleep 1
 
+      print "Executing engine script"
       echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh start &>> $LOGFILE || print "ERROR unable to engine platform"
 
-      sleep 5
-
+      print "Platform has been configured correctly!"
       exit 0;
 
     else
