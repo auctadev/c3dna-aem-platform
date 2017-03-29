@@ -1,4 +1,8 @@
-# C<sup>3</sup>DNA Platform
+C<sup>3</sup>DNA Platform for AEM Customers
+=======
+ 
+   * Version: 1.0.0
+   * Date: March 29<sup>th</sup>, 2017
 
 C<sup>3</sup>DNA brings end-to-end Application Lifecycle Management to
 Enterprise Private or Hybrid Clouds. Both existing applications i.e. pets and
@@ -17,10 +21,6 @@ See the [Getting Started Guide][guide] for further details.
 
 Valid [API Credentials][API] are required at provisioning time.
 
-
-### Post-Installation
-
-Administration is accessible via a web application at http://IPADDR
 
 ### Troubleshooting
 
