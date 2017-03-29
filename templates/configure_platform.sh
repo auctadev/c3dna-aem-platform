@@ -243,7 +243,7 @@ then
       updatePlaceholder "<PUBLIC_IP>" $publicIP $CONF_FILE
       updatePlaceholder "<CCCUSER_PASSWORD>" $CCCUSER_PASSWORD $CONF_FILE
 
-      replace_line_statemachine "replSet" "replSet = DefaultCloud" /etc/mongodb.conf
+      replace_line_statemachine "replSet" "replSet = DefaultReplicaSet" /etc/mongodb.conf
 
       FILE_CONTENT=$(cat $CONF_FILE)
       print "\nFile $CONF_FILE content is:\n[\n$FILE_CONTENT\n]\n" &>> $LOGFILE

@@ -8,7 +8,7 @@
 - name: copy platform shell file
   template: src=configure_platform.sh dest=/work/configure_platform.sh mode=0755
 
-- name: run controller setup script
+- name: run platform setup script
   shell: "/work/configure_platform.sh"
   become: true
   become_user: 'root'
