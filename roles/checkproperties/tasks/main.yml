@@ -15,6 +15,12 @@
     msg: "You should specify the 'apiV1Passwd' property!"
   when: apiV1Passwd is undefined
 - fail:
+    msg: "You should specify the 'apiV2User' property!"
+  when: apiV2User is undefined
+- fail:
+    msg: "You should specify the 'apiV2Passwd' property!"
+  when: apiV2Passwd is undefined
+- fail:
     msg: "You should specify the 'rootPasswd' property!"
   when: rootPasswd is undefined
 - fail:

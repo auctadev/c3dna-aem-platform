@@ -36,6 +36,14 @@ fields:
   name: apiV1Passwd
   required: true
   type: text
+- displayName: CenturyLink Cloud Username
+  name: apiV2User
+  required: true
+  type: text
+- displayName: CenturyLink Cloud Password
+  name: apiV2Passwd
+  type: text
+  required: true
 - displayName: Root Password For servers
   name: rootPasswd
   type: password
