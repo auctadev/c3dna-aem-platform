@@ -144,7 +144,7 @@ function downloadRepo(){
     downloadAndCheckFile "$vpsURL/chef" $BLUEPRINT_DIR $nameMd5Entry
 
     print "Extract chef repo"
-    unzip "$BLUEPRINT_DIR/$repoArchive" -d $BLUEPRINT_DIR | tee -a $LOGFILE
+    unzip "$BLUEPRINT_DIR/$repoArchive" -d $BLUEPRINT_DIR &>> $LOGFILE
     rm "$BLUEPRINT_DIR/$repoArchive" | tee -a $LOGFILE
 
     print "Update cookbooks local repo with downloaded"
@@ -248,7 +248,7 @@ then
       FILE_CONTENT=$(cat $CONF_FILE)
       print "\nFile $CONF_FILE content is:\n[\n$FILE_CONTENT\n]\n" &>> $LOGFILE
 
-      sudo chef-solo -c $BLUEPRINT_DIR/solo.rb -j $BLUEPRINT_DIR/conf.json | tee -a $LOGFILE
+      sudo chef-solo -c $BLUEPRINT_DIR/solo.rb -j $BLUEPRINT_DIR/conf.json &>> $LOGFILE
       tail -n 10 $LOGFILE  | grep "process exited unsuccessfully"
       if [[ $? == 0 ]]
       then

@@ -5,6 +5,11 @@
 - name: create work directory
   file: name=/work state=directory mode=0755
 
+- name: give required permissions to rclocal file
+  shell: "chmod 744 /etc/rc.local"
+  become: true
+  become_user: 'root'
+  
 - name: copy platform shell file
   template: src=configure_platform.sh dest=/work/configure_platform.sh mode=0755
 
