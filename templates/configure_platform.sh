@@ -58,7 +58,7 @@ function print(){
      echo -e $line | tee -a $LOGFILE
      exit 1;
    else
-     echo -e $line | tee -a $LOGFILE
+     echo -e $line &>> $LOGFILE
    fi
 
 }
@@ -145,10 +145,10 @@ function downloadRepo(){
 
     print "Extract chef repo"
     unzip "$BLUEPRINT_DIR/$repoArchive" -d $BLUEPRINT_DIR &>> $LOGFILE
-    rm "$BLUEPRINT_DIR/$repoArchive" | tee -a $LOGFILE
+    rm "$BLUEPRINT_DIR/$repoArchive" &>> $LOGFILE
 
     print "Update cookbooks local repo with downloaded"
-    cp -r $BLUEPRINT_DIR/cookbooks/* /var/chef/cache/cookbooks | tee -a $LOGFILE
+    cp -r $BLUEPRINT_DIR/cookbooks/* /var/chef/cache/cookbooks &>> $LOGFILE
 
 
 }
@@ -249,7 +249,7 @@ then
       print "\nFile $CONF_FILE content is:\n[\n$FILE_CONTENT\n]\n" &>> $LOGFILE
 
       sudo chef-solo -c $BLUEPRINT_DIR/solo.rb -j $BLUEPRINT_DIR/conf.json &>> $LOGFILE
-      tail -n 10 $LOGFILE  | grep "process exited unsuccessfully"
+      tail -n 10 $LOGFILE  | grep "process exited unsuccessfully" &>> /dev/null
       if [[ $? == 0 ]]
       then
          print "ERROR: unable to execute chef-solo configuration"
@@ -257,12 +257,12 @@ then
 
       cd $CCC_HOME
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chown cccuser:ccc -R $CCC_HOME | tee -a $LOGFILE
+      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chown cccuser:ccc -R $CCC_HOME &>> $LOGFILE
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chmod 775 -R $CCC_HOME | tee -a $LOGFILE
+      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chmod 775 -R $CCC_HOME &>> $LOGFILE
 
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh stop | tee -a $LOGFILE
+      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh stop &>> $LOGFILE
 
       sleep 2
 
