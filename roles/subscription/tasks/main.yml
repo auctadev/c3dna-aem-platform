@@ -1,0 +1,30 @@
+---
+- name: submgr registration
+  no_log: '{{ rnr_execution_id is defined }}'
+  #set these vars and then invoke role, any of the fields below can also be passed
+  #vars:
+  #  provider: ECO
+  #  servers: groups['servers']
+  #  product: Docker UCP
+  #  sku: MKTPLC-OSS-ECO-DOCKER-UCP
+  when: 'rnr_execution_id is defined'
+  uri:
+    url: '{{ onramp_url | d("https://onramp.ctl.io/api/PlatformSubscriptions") }}'
+    method: POST
+    body:
+      name: '{{ product }}'
+      productId: '{{ sku }}'
+      dataCenter: '{{ dc }}'
+      servers: '{{ servers }}'
+      providerAlias: "{{ provider }}"
+      accountAlias: '{{ lookup("env", "CLC_ACCT_ALIAS") }}'
+      bearerToken: '{{ lookup("env", "CLC_V2_API_TOKEN") }}'
+      success: true
+      errorMessage: ''
+      startTime: '{{ ansible_date_time["iso8601_micro"] }}'
+      endTime: '{{ ansible_date_time["iso8601_micro"] }}'
+      executionId: '{{ rnr_execution_id | d(99999999 | random | to_uuid) }}'
+      count: '{{ count | d(1) }}'
+    body_format: json
+    return_content: yes
+  register: httppost

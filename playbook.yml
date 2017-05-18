@@ -67,12 +67,11 @@
 - name: wait
   hosts: localhost
   tasks:
-    - wait_for:
-        host: "{{ item.details.ipAddresses[0]['internal'] }}"
-        port: 22
-        delay: 5
-        timeout: 320
-      with_items: '{{ serverInfos.servers }}'
+  - wait_for:
+      host: "{{ hostvars[groups['servers'][0]].ansible_ssh_host }}"
+      port: 22
+      delay: 5
+      timeout: 320
 
 - name: Resize Disk Step 2
   hosts: servers
@@ -92,3 +91,13 @@
   hosts: servers
   roles:
   - c3dna
+
+# - hosts: localhost
+#   vars:
+#     dc: "{{ datacenter }}"
+#     provider: DIME
+#     servers: "{{ groups['servers'] }}"
+#     sku: MKTPLC-C3DNA-AEM-PLATFORM-NODE
+#     product: C3DNA Platform Node for Adobe Experience Manager (AEM)
+#   roles:
+#   - subscription
