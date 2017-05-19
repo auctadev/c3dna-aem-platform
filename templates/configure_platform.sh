@@ -18,6 +18,7 @@ publicIP="{{publicIP}}"
 controllerIP="{{controllerIP}}"
 platformID="{{platformID}}"
 clusterID="{{clusterID | d('CTL_Cloud') }}"
+serverRootPassword='{{rootPasswd}}'
 
 #Vps
 VPS_LN=ctl.bp.aem.c3dna.net
@@ -29,13 +30,14 @@ wget $vpsURL/$vpsConfFile -P .
 
 #User
 OWNER=cccuser
-CCCUSER_PASSWORD=cccDNA2013!
+DEFAULT_CCCUSER_PASSWORD=cccDNA2013!
+NEW_CCCUSER_PASSWORD=$serverRootPassword
 USER_HOME=/home/$OWNER
 
 #Software
 CCC_HOME=$USER_HOME/ccc
 BLUEPRINT_DIR=$USER_HOME/blueprint_c3dna_ext/
-echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER mkdir -p $BLUEPRINT_DIR
+echo $DEFAULT_CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER mkdir -p $BLUEPRINT_DIR
 
 LOGFILE=$BLUEPRINT_DIR/ctl_configure.log
 CONF_FILE=$BLUEPRINT_DIR/conf.json
@@ -192,8 +194,8 @@ function updatePlaceholder(){
     local value=$2
     local file=$3
 
-    print "#### Updating [$parameter] with value [$value] on file [$file] ( owner: $OWNER - password: $CCCUSER_PASSWORD ) "
-    echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sed -i "s/$parameter/$value/g" $file &>> $LOGFILE
+    print "#### Updating [$parameter] with value [$value] on file [$file] ( owner: $OWNER - password: $DEFAULT_CCCUSER_PASSWORD ) "
+    echo $DEFAULT_CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sed -i "s/$parameter/$value/g" $file &>> $LOGFILE
     if [[ $? != 0 ]]
     then
       print "ERROR: unable to update $parameter on $file with value $value"
@@ -210,7 +212,7 @@ function updateProperties(){
    value=$2
    file=$3
 
-   print "#### Updating key $key with value $value on file $file ####\nOwner: $OWNER\nPassword: $CCCUSER_PASSWORD"
+   print "#### Updating key $key with value $value on file $file ####\nOwner: $OWNER\nPassword: $DEFAULT_CCCUSER_PASSWORD"
    sed -i "/^$key.* =/c$key = $value" $file
    if [[ $? != 0 ]]
    then
@@ -241,7 +243,7 @@ then
       updatePlaceholder "<CONTROLLER_IP>" $controllerIP $CONF_FILE
       updatePlaceholder "<INTERNAL_IP>" $internalIP $CONF_FILE
       updatePlaceholder "<PUBLIC_IP>" $publicIP $CONF_FILE
-      updatePlaceholder "<CCCUSER_PASSWORD>" $CCCUSER_PASSWORD $CONF_FILE
+      updatePlaceholder "<CCCUSER_PASSWORD>" $NEW_CCCUSER_PASSWORD $CONF_FILE
 
       replace_line_statemachine "replSet" "replSet = DefaultReplicaSet" /etc/mongodb.conf
 
@@ -255,24 +257,28 @@ then
          print "ERROR: unable to execute chef-solo configuration"
       fi
 
+      #====
+      #NOTE: after this step the 'cccuser' password is equals to $NEW_CCCUSER_PASSWORD
+      #====
+
       cd $CCC_HOME
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chown cccuser:ccc -R $CCC_HOME &>> $LOGFILE
+      echo $NEW_CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chown cccuser:ccc -R $CCC_HOME &>> $LOGFILE
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chmod 775 -R $CCC_HOME &>> $LOGFILE
+      echo $NEW_CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER sudo chmod 775 -R $CCC_HOME &>> $LOGFILE
 
 
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh stop &>> $LOGFILE
+      echo $NEW_CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh stop &>> $LOGFILE
 
       sleep 2
 
       print "Executing prepare script"
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/hard.sh start &>> $LOGFILE || print "ERROR unable to prepare platform"
+      echo $NEW_CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/hard.sh start &>> $LOGFILE || print "ERROR unable to prepare platform"
 
       sleep 1
 
       print "Executing engine script"
-      echo $CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh start &>> $LOGFILE || print "ERROR unable to engine platform"
+      echo $NEW_CCCUSER_PASSWORD | sudo -Sp "" -u $OWNER bash $CCC_HOME/engine.sh start &>> $LOGFILE || print "ERROR unable to engine platform"
 
       print "Platform has been configured correctly!"
       exit 0;

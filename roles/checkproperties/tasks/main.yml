@@ -29,3 +29,9 @@
 - fail:
     msg: "You should specify the 'platformID' property!"
   when: platformID is undefined
+- fail:
+    msg: "You should specify the 'rootPasswd' property!"
+  when: rootPasswd is undefined
+- fail:
+    msg: "Root password is not valid.It should have at least: 2 uppercase letters, 1 special case letter, 2 digits, 2 lowercase letters and not include \",',° or &. Length 8."
+  when: not (rootPasswd | match("^(?=.*[A-Z].*[A-Z])(?=.*[!@#+%?<>/\\\\-_$&*.])(?!.*[&'\"°])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z]).{8,}$"))
